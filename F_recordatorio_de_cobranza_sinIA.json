@@ -1,0 +1,1990 @@
+{
+  "name": "F_recordatorio_de_cobranza_sinIA",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 6
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        -16
+      ],
+      "id": "518bf34b-7f09-41f2-9038-3b02b97883f0",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        624,
+        -16
+      ],
+      "id": "e5804a78-69ac-40a3-86ad-d7578701f5a3",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "Vencido",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d3d5e105-3d4f-4aae-b6cf-dc16c82a589c"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vencido"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1abfcbcf-76d8-456f-9ad8-ec95f164ce5f",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "Próximo a vencer",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Próximo a vencer"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8a952b3b-d09d-46d1-a201-ddd62b03707e",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "Vence hoy",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Vence hoy"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2ad0571c-1986-4fb7-ab29-390d0800d811",
+                    "leftValue": "={{ $json.Estado }}",
+                    "rightValue": "A tiempo",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "A tiempo"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        848,
+        -480
+      ],
+      "id": "429ff770-4ad4-4283-a037-7d403db8e889",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "amount": "={{ $json.delay_sec }}"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        3840,
+        -240
+      ],
+      "id": "33453b83-7f84-4c65-a0c0-a9aa4df469d1",
+      "name": "Wait",
+      "webhookId": "58d9bab7-07cd-4c0c-b00f-7ce7cf4329aa"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE",
+          "mode": "list",
+          "cachedResultName": "Cobranza2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Datos_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        288,
+        -16
+      ],
+      "id": "78f15af7-5c9d-4317-8f5d-6f94425cd3bb",
+      "name": "Obtener datos",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "UOWPZoYPApny206m",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a966323c-09f9-42c0-833d-a6cbee06c677",
+              "name": "ultimo_mensaje",
+              "value": "={{ $json.data[0].text }}",
+              "type": "string"
+            },
+            {
+              "id": "eb906a4a-003f-4440-a0f9-e41887624fa4",
+              "name": "celular",
+              "value": "=51{{ $('Switch').item.json['Teléfono'] }}@s.whatsapp.net",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1776,
+        -432
+      ],
+      "id": "a6189e82-ff8d-4ab0-8c26-283d8f33d89c",
+      "name": "Definir variables"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolutionapo-evolution-api.vhphhd.easypanel.host/message/sendText/Chatbot",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "C8A8DFDD1BF2-4AA8-B721-24600106A900"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "={{ $('Definir variables').item.json.celular }}"
+            },
+            {
+              "name": "text",
+              "value": "={{ $json.mensaje_whatsapp }}"
+            },
+            {
+              "name": "delay",
+              "value": "={{2000}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3008,
+        -448
+      ],
+      "id": "dfe8c7f6-73ab-4040-b5df-89196b652027",
+      "name": "Mensaje Whatsapp",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolutionapo-evolution-api.vhphhd.easypanel.host/message/sendText/Chatbot",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "C8A8DFDD1BF2-4AA8-B721-24600106A900"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "51928905935@s.whatsapp.net"
+            },
+            {
+              "name": "text",
+              "value": "=Hola, hubo un error al enviar el recordatorio al cliente {{ $('Obtener datos').item.json.Nombre }} al número {{ $('Obtener datos').item.json['Teléfono'] }}.\n\nInfo del error: {{ $json.error.message }}"
+            },
+            {
+              "name": "delay",
+              "value": "={{2000}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3232,
+        -256
+      ],
+      "id": "97eaa785-555a-4cc7-8759-5efbd3d80cad",
+      "name": "Mensaje Whatsapp1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Obtener el mensaje original en HTML\nlet mensajeHTML =$('Definir variables').first().json.ultimo_mensaje ;\n\n// Reemplazar etiquetas <strong> y </strong> por asteriscos\nmensajeHTML = mensajeHTML.replace(/<strong>/gi, '*');\nmensajeHTML = mensajeHTML.replace(/<\\/strong>/gi, '*');\n\n// Eliminar etiquetas <br>, <br/> y <br /> (cualquier variante)\nmensajeHTML = mensajeHTML.replace(/<br\\s*\\/?>/gi, '\\n'); // O usa '' si no quieres saltos de línea\n\n// Devolver el mensaje limpio para WhatsApp\nreturn [\n  {\n    json: {\n      mensaje_whatsapp: mensajeHTML\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2768,
+        -448
+      ],
+      "id": "841d8a7a-c7d7-407d-aec8-0de5e47339ab",
+      "name": "Formatear mensaje Whatsapp"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ahora = new Date();\n\n// Convertir a hora Perú (UTC-5)\nconst horaPeru = new Date(ahora.getTime() - 5 * 60 * 60 * 1000);\n\n// Formato: DD/MM/YYYY HH:mm:ss\nconst dia = String(horaPeru.getDate()).padStart(2, '0');\nconst mes = String(horaPeru.getMonth() + 1).padStart(2, '0');\nconst anio = horaPeru.getFullYear();\nconst horas = String(horaPeru.getHours()).padStart(2, '0');\nconst minutos = String(horaPeru.getMinutes()).padStart(2, '0');\nconst segundos = String(horaPeru.getSeconds()).padStart(2, '0');\n\nconst fechaHoraPeru = `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;\n\nreturn [\n  {\n    json: {\n      fecha_hora_peru: fechaHoraPeru\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2288,
+        -448
+      ],
+      "id": "5b9775fe-9188-41b6-a743-d6729fc7b378",
+      "name": "Fecha y hora actual (Perú)"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Rango de espera en segundos\nconst min = 4.0;\nconst max = 8.0;\n\n// Genera un número aleatorio entre min y max, con 2 decimales\nconst delay = (Math.random() * (max - min) + min).toFixed(2);\n\n// Retorna el valor como número decimal en la propiedad 'delay_sec'\nreturn [{\n  json: {\n    delay_sec: parseFloat(delay)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3856,
+        -560
+      ],
+      "id": "92e2c16d-f035-485e-b981-ebe6be0799a2",
+      "name": "Tiempo de espera variable"
+    },
+    {
+      "parameters": {
+        "content": "Se implementa un tiempo de espera aleatorio para reducir el riesgo de bloqueo por parte de WhatsApp, evitando que el flujo sea detectado como automatizado o masivo, lo cual infringe sus políticas de uso.",
+        "height": 144,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4032,
+        -576
+      ],
+      "typeVersion": 1,
+      "id": "fbb86d32-a69d-4c98-b2ff-fcee58d29d4c",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "Este bloque de código elimina etiquetas HTML para adaptar el mensaje a un formato plano, asegurando su correcta visualización en WhatsApp.",
+        "height": 128,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2720,
+        -608
+      ],
+      "typeVersion": 1,
+      "id": "8eccbd37-56fd-4aba-ba4b-d8a3c9cd3cb7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "Se aplica una corrección horaria de -5 horas para ajustar la fecha y hora del servidor (ubicado en Brasil) a la zona horaria de Perú (UTC-5). Esto asegura que los registros y mensajes se generen con la hora local correcta.",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2240,
+        -656
+      ],
+      "typeVersion": 1,
+      "id": "76c9aca9-4990-4de4-b637-f21ca645c15a",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "Actualiza el estado del recordatorio en la BD.",
+        "height": 80,
+        "width": 208
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1456,
+        -912
+      ],
+      "typeVersion": 1,
+      "id": "14963103-098e-4558-9ca4-589db327a8c6",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Switch').item.json.Email }}",
+        "subject": "Recordatorio pago",
+        "message": "={{ $json.ultimo_mensaje }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1968,
+        -432
+      ],
+      "id": "ff6f2089-fefa-4731-9129-03ccf6c1dc91",
+      "name": "Envío de correo",
+      "webhookId": "582353ae-5608-4ce5-b830-36bcc18d5049",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "yXzFtc9O3IlGA9c5",
+          "name": "Gmail account"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "8e222cf9-aa2e-4897-9aea-dc3475db8261",
+              "leftValue": "={{ $json['Teléfono'].toString() }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "803dbfa9-2064-4101-a172-1c8fee364247",
+              "leftValue": "={{ $json.Email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        -448
+      ],
+      "id": "9f0fac99-d0cb-4e17-bc38-1fa0d255213d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://evolutionapo-evolution-api.vhphhd.easypanel.host/message/sendText/Chatbot",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "apikey",
+              "value": "C8A8DFDD1BF2-4AA8-B721-24600106A900"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "number",
+              "value": "51928905935@s.whatsapp.net"
+            },
+            {
+              "name": "text",
+              "value": "=No se pudo enviar el recordatorio al cliente {{ $('Switch').item.json.Nombre }} debido a que no existe una dirección de correo registrada o el correo es incorrecto.\nInfo de error:  {{ $json.error }}"
+            },
+            {
+              "name": "delay",
+              "value": "={{2000}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2288,
+        -288
+      ],
+      "id": "9c86fb6f-7368-4059-a61d-972424637e06",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "content": "Convertir el numero a string.",
+        "height": 80,
+        "width": 208,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -544
+      ],
+      "typeVersion": 1,
+      "id": "a68190a9-3ceb-4b89-8b4e-af97a01ec057",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "jsCode": "const ahora = new Date();\n\n// Convertir a hora Perú (UTC-5)\nconst horaPeru = new Date(ahora.getTime() - 5 * 60 * 60 * 1000);\n\n// Formato: DD/MM/YYYY HH:mm:ss\nconst dia = String(horaPeru.getDate()).padStart(2, '0');\nconst mes = String(horaPeru.getMonth() + 1).padStart(2, '0');\nconst anio = horaPeru.getFullYear();\nconst horas = String(horaPeru.getHours()).padStart(2, '0');\nconst minutos = String(horaPeru.getMinutes()).padStart(2, '0');\nconst segundos = String(horaPeru.getSeconds()).padStart(2, '0');\n\nconst fechaHoraPeru = `${dia}/${mes}/${anio} ${horas}:${minutos}:${segundos}`;\n\nreturn [\n  {\n    json: {\n      fecha_hora_peru: fechaHoraPeru\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3232,
+        -464
+      ],
+      "id": "a35c2434-3bfd-433a-88e8-79598b5fe207",
+      "name": "Fecha y hora actual (Perú)1"
+    },
+    {
+      "parameters": {
+        "content": "Se aplica una corrección horaria de -5 horas para ajustar la fecha y hora del servidor (ubicado en Brasil) a la zona horaria de Perú (UTC-5). Esto asegura que los registros y mensajes se generen con la hora local correcta.",
+        "height": 192,
+        "width": 208,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3184,
+        -688
+      ],
+      "typeVersion": 1,
+      "id": "6b6abfb0-23e1-4cda-a816-a807fee64320",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "Actualiza el estado del recordatorio en la BD.",
+        "height": 80,
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2496,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "56a5c46f-91ba-45cb-81c0-a6497515516f",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "Actualiza el estado del recordatorio en la BD.",
+        "height": 80,
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2496,
+        -128
+      ],
+      "typeVersion": 1,
+      "id": "b083ffd3-e33e-4d1a-8886-1371e6e42fc5",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "Actualiza el estado del recordatorio en la BD.",
+        "height": 80,
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3408,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "00a9b473-0280-4d21-bf1a-4d2910a27c1b",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "Actualiza el estado del recordatorio en la BD.",
+        "height": 80,
+        "width": 160
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3456,
+        -560
+      ],
+      "typeVersion": 1,
+      "id": "12420618-5638-4378-b497-faf78c87c0ec",
+      "name": "Sticky Note13"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE",
+          "mode": "list",
+          "cachedResultName": "Cobranza2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Datos_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Cliente": "={{ $('Switch').item.json['ID Cliente'] }}",
+            "Estado Recordatorio Whatsapp": "=Enviado el {{ $json.fecha_hora_peru }}"
+          },
+          "matchingColumns": [
+            "ID Cliente"
+          ],
+          "schema": [
+            {
+              "id": "ID Cliente",
+              "displayName": "ID Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Factura",
+              "displayName": "Monto Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Pagado",
+              "displayName": "Monto Pagado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Saldo Pendiente",
+              "displayName": "Saldo Pendiente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Vencimiento",
+              "displayName": "Fecha Vencimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Días Vencidos",
+              "displayName": "Días Vencidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Gmail",
+              "displayName": "Estado Recordatorio Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Whatsapp",
+              "displayName": "Estado Recordatorio Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        3488,
+        -464
+      ],
+      "id": "d0a734b5-e837-4b47-b1c2-c08567656784",
+      "name": "Actualizar BD4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "UOWPZoYPApny206m",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE",
+          "mode": "list",
+          "cachedResultName": "Cobranza2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Datos_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Cliente": "={{ $('Switch').item.json['ID Cliente'] }}",
+            "Estado Recordatorio Whatsapp": "Error"
+          },
+          "matchingColumns": [
+            "ID Cliente"
+          ],
+          "schema": [
+            {
+              "id": "ID Cliente",
+              "displayName": "ID Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Factura",
+              "displayName": "Monto Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Pagado",
+              "displayName": "Monto Pagado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Saldo Pendiente",
+              "displayName": "Saldo Pendiente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Vencimiento",
+              "displayName": "Fecha Vencimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Días Vencidos",
+              "displayName": "Días Vencidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Gmail",
+              "displayName": "Estado Recordatorio Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Whatsapp",
+              "displayName": "Estado Recordatorio Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        3440,
+        -256
+      ],
+      "id": "3f6960f2-8d67-4ecd-a7e4-35223199ac34",
+      "name": "Actualizar BD5",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "UOWPZoYPApny206m",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE",
+          "mode": "list",
+          "cachedResultName": "Cobranza2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Datos_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Cliente": "={{ $json['ID Cliente'] }}",
+            "Estado Recordatorio Gmail": "Error",
+            "Estado Recordatorio Whatsapp": "Error"
+          },
+          "matchingColumns": [
+            "ID Cliente"
+          ],
+          "schema": [
+            {
+              "id": "ID Cliente",
+              "displayName": "ID Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Factura",
+              "displayName": "Monto Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Pagado",
+              "displayName": "Monto Pagado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Saldo Pendiente",
+              "displayName": "Saldo Pendiente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Vencimiento",
+              "displayName": "Fecha Vencimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Días Vencidos",
+              "displayName": "Días Vencidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Gmail",
+              "displayName": "Estado Recordatorio Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado Recordatorio Whatsapp",
+              "displayName": "Estado Recordatorio Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        1504,
+        -816
+      ],
+      "id": "77aa1474-4735-4dfb-9ba0-9ad9d4f008fd",
+      "name": "Actualizar BD1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "UOWPZoYPApny206m",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE",
+          "mode": "list",
+          "cachedResultName": "Cobranza2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Datos_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Cliente": "={{ $('Switch').item.json['ID Cliente'] }}",
+            "Estado Recordatorio Gmail": "=Enviado el {{ $json.fecha_hora_peru }}"
+          },
+          "matchingColumns": [
+            "ID Cliente"
+          ],
+          "schema": [
+            {
+              "id": "ID Cliente",
+              "displayName": "ID Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Factura",
+              "displayName": "Monto Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Pagado",
+              "displayName": "Monto Pagado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Saldo Pendiente",
+              "displayName": "Saldo Pendiente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Vencimiento",
+              "displayName": "Fecha Vencimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Días Vencidos",
+              "displayName": "Días Vencidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Gmail",
+              "displayName": "Estado Recordatorio Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado Recordatorio Whatsapp",
+              "displayName": "Estado Recordatorio Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2528,
+        -448
+      ],
+      "id": "5890a676-a7f1-407c-9ef6-2b4cc86b2170",
+      "name": "Actualizar BD2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "UOWPZoYPApny206m",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE",
+          "mode": "list",
+          "cachedResultName": "Cobranza2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Datos_clientes",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zAd_MUOWlbK_xJnDdhTQkhl67q02hH-AKazwBTSSSsE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID Cliente": "={{ $('Switch').item.json['ID Cliente'] }}",
+            "Estado Recordatorio Gmail": "Error"
+          },
+          "matchingColumns": [
+            "ID Cliente"
+          ],
+          "schema": [
+            {
+              "id": "ID Cliente",
+              "displayName": "ID Cliente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Teléfono",
+              "displayName": "Teléfono",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Factura",
+              "displayName": "Monto Factura",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Monto Pagado",
+              "displayName": "Monto Pagado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Saldo Pendiente",
+              "displayName": "Saldo Pendiente",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Fecha Vencimiento",
+              "displayName": "Fecha Vencimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Días Vencidos",
+              "displayName": "Días Vencidos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Estado Recordatorio Gmail",
+              "displayName": "Estado Recordatorio Gmail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado Recordatorio Whatsapp",
+              "displayName": "Estado Recordatorio Whatsapp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        2528,
+        -288
+      ],
+      "id": "470129d6-61e6-4667-925d-0251dd7b0714",
+      "name": "Actualizar BD3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "UOWPZoYPApny206m",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8df0dfdc-6e6f-4e96-a43e-0bdcb24e1980",
+              "name": "text",
+              "value": "=Hola {{ $json.Nombre }},<br>le recordamos que su factura por S/ {{ $json['Monto Factura'] }} presenta un saldo pendiente de <strong>S/ {{ $json['Saldo Pendiente'] }}</strong> y tiene como fecha de vencimiento el {{ $json['Fecha Vencimiento'] }}.<br>La factura vence en <strong>{{ Math.abs($json['Días Vencidos']) }} días.</strong><br><br>Le recomendamos realizar el pago con anticipación para evitar cualquier inconveniente. Puede hacerlo en el siguiente enlace:<br>www.linkdepagoejemplo.com<br>Utilizando su código de cliente: {{ $json['ID Cliente'] }} <br><br>Si tiene alguna consulta o requiere asistencia, no dude en comunicarse con nosotros.<br><br>Saludos cordiales.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1280,
+        -544
+      ],
+      "id": "67bf8bed-3117-43bb-b382-3e2dd43f69c4",
+      "name": "Por vencer (<3 dias)"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        -432
+      ],
+      "id": "59a38133-9406-41ff-aba0-ba7624181fd6",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6c0829bc-c551-424a-95c9-837b2715a8f5",
+              "name": "text",
+              "value": "=Hola {{ $json.Nombre }},<br>le recordamos que su factura por S/ {{ $json['Monto Factura'] }} presenta un saldo pendiente de <strong>S/ {{ $json['Saldo Pendiente'] }}</strong>, con fecha de vencimiento el {{ $json['Fecha Vencimiento'] }}.<br>A la fecha, el documento tiene <strong>{{ $json['Días Vencidos'] }} días</strong> de vencido.<br><br>Le solicitamos realizar el pago correspondiente lo antes posible a través del siguiente enlace:<br>www.linkdepagoejemplo.com<br>Utilizando su código de cliente: {{ $json['ID Cliente'] }}<br><br>Para evitar inconvenientes con su servicio, agradecemos realizar el pago a la brevedad y enviar la constancia del mismo. Si tiene alguna consulta, no dude en comunicarse con nosotros.<br><br>Saludos cordiales.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        -720
+      ],
+      "id": "2e7015ec-91e8-4b69-884f-b07d42c222d6",
+      "name": "Vencido"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "72f9b1cf-b551-4c94-b76d-009dd195ed6b",
+              "name": "text",
+              "value": "=Hola {{ $json.Nombre }},<br>le recordamos amablemente que su factura por S/ {{ $json['Monto Factura'] }} presenta un saldo pendiente de <strong>S/ {{ $json['Saldo Pendiente'] }}</strong> y tiene como fecha de vencimiento el {{ $json['Fecha Vencimiento'] }} <strong>(faltan {{ Math.abs($json['Días Vencidos']) }} días)</strong>.<br><br>Le sugerimos programar su pago con anticipación para evitar contratiempos. Puede realizarlo en el siguiente enlace:<br>www.linkdepagoejemplo.com<br>Usando su código de cliente: {{ $json['ID Cliente'] }}<br><br>Si tiene alguna duda o consulta, estamos a su disposición para ayudarle.<br>Saludos cordiales.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -208
+      ],
+      "id": "b78d4cfb-de05-47e8-8121-ed85da813f71",
+      "name": "A tiempo"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a4fc6cb8-069b-4a89-93dd-ea630ff3bd6e",
+              "name": "text",
+              "value": "=Hola {{ $json.Nombre }},<br>le recordamos que su factura por S/ {{ $json['Monto Factura'] }} presenta un saldo pendiente de <strong>S/ {{ $json['Saldo Pendiente'] }}</strong> y vence <strong>hoy</strong>, {{ $json['Fecha Vencimiento'] }}.<br><br>Le sugerimos realizar el pago el día de hoy para evitar contratiempos. Puede hacerlo en el siguiente enlace:<br>www.linkdepagoejemplo.com<br>Utilizando su código de cliente: {{ $json['ID Cliente'] }}<br><br>Si tiene alguna consulta o necesita asistencia, no dude en comunicarse con nosotros.<br><br>Saludos cordiales.",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1264,
+        -368
+      ],
+      "id": "d9da4b5c-491f-4a4b-b84d-e7a1cf36b7f6",
+      "name": "Vence hoy"
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2025-07-30T01:05:41.574-05:00",
+          "Readable date": "July 30th 2025, 1:05:41 am",
+          "Readable time": "1:05:41 am",
+          "Day of week": "Wednesday",
+          "Year": "2025",
+          "Month": "July",
+          "Day of month": "30",
+          "Hour": "01",
+          "Minute": "05",
+          "Second": "41",
+          "Timezone": "America/Lima (UTC-05:00)"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Obtener datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Vencido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Por vencer (<3 dias)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Vence hoy",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "A tiempo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener datos": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Definir variables": {
+      "main": [
+        [
+          {
+            "node": "Envío de correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "Fecha y hora actual (Perú)1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Mensaje Whatsapp1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mensaje Whatsapp1": {
+      "main": [
+        [
+          {
+            "node": "Actualizar BD5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear mensaje Whatsapp": {
+      "main": [
+        [
+          {
+            "node": "Mensaje Whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fecha y hora actual (Perú)": {
+      "main": [
+        [
+          {
+            "node": "Actualizar BD2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tiempo de espera variable": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envío de correo": {
+      "main": [
+        [
+          {
+            "node": "Fecha y hora actual (Perú)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Actualizar BD1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Actualizar BD3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fecha y hora actual (Perú)1": {
+      "main": [
+        [
+          {
+            "node": "Actualizar BD4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar BD4": {
+      "main": [
+        [
+          {
+            "node": "Tiempo de espera variable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar BD5": {
+      "main": [
+        [
+          {
+            "node": "Tiempo de espera variable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar BD1": {
+      "main": [
+        [
+          {
+            "node": "Tiempo de espera variable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar BD2": {
+      "main": [
+        [
+          {
+            "node": "Formatear mensaje Whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Actualizar BD3": {
+      "main": [
+        [
+          {
+            "node": "Formatear mensaje Whatsapp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Por vencer (<3 dias)": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Definir variables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vencido": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "A tiempo": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vence hoy": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Lima",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "5a525c25-30d5-4bd4-a101-7904901b87f7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0fe3d5bb008e5b96b18c215374c11f23ad8bf5bbd0a5b6ebd2b2dd15ce224b38"
+  },
+  "id": "SStzJ5HJEqJzeWHr",
+  "tags": []
+}
